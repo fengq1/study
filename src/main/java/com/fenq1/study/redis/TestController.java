@@ -25,10 +25,10 @@ public class TestController {
     @GetMapping()
     public ResponseEntity<Article> get(@RequestParam String id) throws InterruptedException {
         Article article = (Article) redisUtil.get(id);
-        if (null == article)
+        if (null == article) {
             article = articleMapper.selectById(id);
-        log.info("1");
-        Thread.sleep(1000);
+            redisUtil.set(article.getId(), article, 100);
+        }
         return new ResponseEntity(article, HttpStatus.ACCEPTED);
     }
 
