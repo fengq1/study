@@ -27,34 +27,25 @@ public class ID_242 {
      * @param args
      */
     public static void main(String[] args) {
-        String s = "anagram";
-        String t = "nagaram";
+        String s = "a";
+        String t = "ab";
         System.out.println(new Solution().isAnagram(s, t));
     }
 
     static
     class Solution {
         public boolean isAnagram(String s, String t) {
-            HashMap<String, Integer> map = new HashMap<>();
-            Integer num;
-            String key;
-            for (char c : s.toCharArray()) {
-                key = String.valueOf(c);
-                num = map.get(key);
-                num = null == num ? 1 : num + 1;
-                map.put(key, num);
-            }
-            for (char c : t.toCharArray()) {
-                key = String.valueOf(c);
-                num = map.get(key);
-                if (null == num)
+            if (s.length() != t.length())
+                return false;
+            int[] hash = new int[127];
+            for (char c : s.toCharArray())
+                hash[c]++;
+            for (char c : t.toCharArray())
+                hash[c]--;
+            for (char c : s.toCharArray())
+                if (hash[c] != 0)
                     return false;
-                if (num == 1)
-                    map.remove(key);
-                else
-                    map.put(key, num - 1);
-            }
-            return map.keySet().size() == 0;
+            return true;
         }
     }
 
