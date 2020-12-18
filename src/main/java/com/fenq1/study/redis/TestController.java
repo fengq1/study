@@ -4,6 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +21,19 @@ public class TestController {
     private ArticleMapper articleMapper;
 
     @Autowired
+    private GoodsMapper goodsMapper;
+
+    @Autowired
     private RedisUtil redisUtil;
 
     @GetMapping()
-    public ResponseEntity<Article> get(@RequestParam String id) throws InterruptedException {
+    public ResponseEntity<Article> get(@RequestParam String id) {
         Article article = (Article) redisUtil.get(id);
         if (null == article) {
             article = articleMapper.selectById(id);
             redisUtil.set(article.getId(), article, 100);
         }
+
         return new ResponseEntity(article, HttpStatus.ACCEPTED);
     }
 
@@ -45,4 +50,5 @@ public class TestController {
         articleMapper.insert(article);
         redisUtil.set(article.getId(), article, 100);
     }
+
 }

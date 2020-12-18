@@ -3,6 +3,7 @@ package com.fenq1.study.redis;
 import cn.hutool.core.collection.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,30 @@ public class RedisUtil {
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    public void watch(String key) {
+        redisTemplate.watch(key);
+    }
+
+    public void unwatch() {
+        redisTemplate.unwatch();
+    }
+
+    public void multi() {
+        redisTemplate.multi();
+    }
+
+    public void exec() {
+        redisTemplate.exec();
+    }
+
+    public void execute(SessionCallback sessionCallback) {
+        redisTemplate.execute(sessionCallback);
+    }
+
+    public void discard() {
+        redisTemplate.discard();
+    }
 
     /**
      * 指定缓存失效时间
